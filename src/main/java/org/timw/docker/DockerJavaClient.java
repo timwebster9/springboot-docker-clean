@@ -1,4 +1,4 @@
-package org.springcli.docker;
+package org.timw.docker;
 
 import com.spotify.docker.client.DefaultDockerClient;
 import com.spotify.docker.client.DockerClient;
@@ -23,7 +23,7 @@ public class DockerJavaClient {
         try {
             return this.dockerClient.listImages();
         }
-        catch (Exception e) {
+        catch (final Exception e) {
             throw new RuntimeException(e);
         }
     }

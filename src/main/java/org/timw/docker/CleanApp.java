@@ -1,8 +1,8 @@
-package org.springcli.docker;
+package org.timw.docker;
 
 import com.spotify.docker.client.messages.Image;
 import java.util.List;
-import org.springcli.docker.service.ImageService;
+import org.timw.docker.service.ImageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
