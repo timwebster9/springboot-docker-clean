@@ -14,6 +14,9 @@ public class CleanerServiceTest {
     @Mock
     private ContainerService containerService;
 
+    @Mock
+    private ImageService imageService;
+
     @InjectMocks
     private CleanerService testSubject;
 
@@ -21,6 +24,7 @@ public class CleanerServiceTest {
     public void clean() throws Exception {
         this.testSubject.clean();
         verify(this.containerService).deleteNonRunningContainers();
+        verify(this.imageService).deleteAllImages();
     }
 
 }

@@ -10,6 +10,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Spy;
+import org.mockito.internal.util.reflection.Whitebox;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -17,6 +18,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -97,5 +99,19 @@ public class DockerJavaClientTest {
 
         testSubject.deleteContainer(containerId);
     }
+
+    @Test
+    public void close() {
+        Whitebox.setInternalState(this.testSubject, "dockerClient", this.dockerClient);
+        this.testSubject.close();
+        verify(this.dockerClient).close();
+    }
+
+    @Test
+    public void close_when_docker_client_null() {
+        this.testSubject.close();
+        verifyZeroInteractions(this.dockerClient);
+    }
+
 
 }

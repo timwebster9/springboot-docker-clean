@@ -63,6 +63,10 @@
                 <targetPath>${project.build.directory}/docker</targetPath>
                 <filtering>true</filtering>
             </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
         </resources>
         <plugins>
             <plugin>

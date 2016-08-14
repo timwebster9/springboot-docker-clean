@@ -2,18 +2,24 @@ package org.timw.docker.service;
 
 import com.spotify.docker.client.messages.Container;
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.timw.docker.DockerJavaClient;
 
 @Component
 public class ContainerService {
 
+    private static Logger LOG = LoggerFactory.getLogger(ContainerService.class);
     private DockerJavaClient dockerJavaClient;
+    private boolean dryRun;
 
     @Autowired
-    public ContainerService(final DockerJavaClient dockerJavaClient) {
+    public ContainerService(final DockerJavaClient dockerJavaClient, @Value("${dryrun}") boolean dryRun) {
         this.dockerJavaClient = dockerJavaClient;
+        this.dryRun = dryRun;
     }
 
     public List<Container> listNonRunningContainers() {
@@ -26,7 +32,10 @@ public class ContainerService {
     }
 
     private void deleteContainer(final String containerId) {
-        this.dockerJavaClient.deleteContainer(containerId);
+        LOG.info("Removing container: {}", containerId);
+        if (!dryRun) {
+            this.dockerJavaClient.deleteContainer(containerId);
+        }
     }
 
 }

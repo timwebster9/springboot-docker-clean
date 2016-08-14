@@ -7,17 +7,16 @@ import org.springframework.stereotype.Component;
 public class CleanerService {
 
     private ContainerService containerService;
+    private ImageService imageService;
 
     @Autowired
-    public CleanerService(final ContainerService containerService) {
+    public CleanerService(final ContainerService containerService, final ImageService imageService) {
         this.containerService = containerService;
+        this.imageService = imageService;
     }
 
     public void clean() {
-        this.cleanContainers();
-    }
-
-    private void cleanContainers() {
         this.containerService.deleteNonRunningContainers();
+        this.imageService.deleteAllImages();
     }
 }
