@@ -1,7 +1,6 @@
 package org.timw.docker.service;
 
 import com.spotify.docker.client.messages.Container;
-import com.spotify.docker.client.messages.Image;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

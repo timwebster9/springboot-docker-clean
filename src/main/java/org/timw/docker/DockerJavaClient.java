@@ -3,14 +3,12 @@ package org.timw.docker;
 import com.google.common.annotations.VisibleForTesting;
 import com.spotify.docker.client.DefaultDockerClient;
 import com.spotify.docker.client.DockerClient;
-import com.spotify.docker.client.exceptions.DockerException;
 import com.spotify.docker.client.messages.Container;
 import com.spotify.docker.client.messages.Image;
 import java.util.List;
 import org.springframework.stereotype.Component;
 
 import static com.spotify.docker.client.DockerClient.ListContainersParam.allContainers;
-import static com.spotify.docker.client.DockerClient.ListContainersParam.exitedContainers;
 import static com.spotify.docker.client.DockerClient.ListContainersParam.withStatusCreated;
 import static com.spotify.docker.client.DockerClient.ListContainersParam.withStatusExited;
 

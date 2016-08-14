@@ -1,10 +1,10 @@
 package org.timw.docker.service;
 
 import com.spotify.docker.client.messages.Image;
-import org.timw.docker.DockerJavaClient;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.timw.docker.DockerJavaClient;
 
 @Component
 public class ImageService {

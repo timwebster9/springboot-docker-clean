@@ -1,13 +1,10 @@
 package org.timw.docker;
 
-import com.spotify.docker.client.messages.Image;
-import java.util.List;
-import org.timw.docker.service.CleanerService;
-import org.timw.docker.service.ImageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.timw.docker.service.CleanerService;
 
 @SpringBootApplication
 public class CleanApp implements CommandLineRunner {
