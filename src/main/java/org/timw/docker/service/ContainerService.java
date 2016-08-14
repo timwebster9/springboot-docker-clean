@@ -12,7 +12,7 @@ import org.timw.docker.DockerJavaClient;
 @Component
 public class ContainerService {
 
-    private static Logger LOG = LoggerFactory.getLogger(ContainerService.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ContainerService.class);
     private DockerJavaClient dockerJavaClient;
     private boolean dryRun;
 

@@ -27,6 +27,7 @@ public class CleanApp implements CommandLineRunner {
         this.dryrun = dryRun;
     }
 
+    @Override
     public void run(final String ... args) throws Exception {
         if (this.dryrun) {
             LOG.info("Dry run is {}", dryrun ? "enabled" : "disabled");

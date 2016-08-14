@@ -12,7 +12,7 @@ import org.timw.docker.DockerJavaClient;
 @Component
 public class ImageService {
 
-    private static Logger LOG = LoggerFactory.getLogger(ImageService.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ImageService.class);
     private DockerJavaClient dockerJavaClient;
     private boolean dryRun;
 
