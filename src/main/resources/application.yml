@@ -1,1 +1,4 @@
+logging:
+  path: /tmp/docker-clean
+
 dryrun: true
