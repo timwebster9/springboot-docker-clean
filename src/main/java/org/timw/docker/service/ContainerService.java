@@ -1,6 +1,7 @@
 package org.timw.docker.service;
 
 import com.spotify.docker.client.messages.Container;
+import com.spotify.docker.client.messages.Image;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;

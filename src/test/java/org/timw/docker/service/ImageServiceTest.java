@@ -29,7 +29,7 @@ public class ImageServiceTest {
 
     @Before
     public void setup() {
-        this.testSubject = new ImageService(this.dockerJavaClient, this.containerService, false);
+        this.testSubject = new ImageService(this.dockerJavaClient, this.containerService, Lists.newArrayList(), false);
     }
 
     @Test

@@ -2,3 +2,6 @@ logging:
   path: /tmp/docker-clean
 
 dryrun: true
+
+exclusions:
+  images: centos:7, mars:18079/docker-clean

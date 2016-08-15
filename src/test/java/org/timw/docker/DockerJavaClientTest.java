@@ -83,12 +83,19 @@ public class DockerJavaClientTest {
     }
 
     @Test(expected = CleanerException.class)
+    public void list_running_containers_throws_exception() throws Exception {
+        doReturn(dockerClient).when(testSubject).getClient();
+        when(dockerClient.listContainers(any())).thenThrow(new DockerException("some exception"));
+
+        testSubject.listRunningContainers();
+    }
+
+    @Test(expected = CleanerException.class)
     public void list_non_running_containers_throws_exception() throws Exception {
         doReturn(dockerClient).when(testSubject).getClient();
         when(dockerClient.listContainers(any())).thenThrow(new DockerException("some exception"));
 
-        final List<Container> containers = testSubject.listNonRunningContainers();
-        assertThat(containers).isEmpty();
+        testSubject.listNonRunningContainers();
     }
 
     @Test
@@ -110,6 +117,24 @@ public class DockerJavaClientTest {
     }
 
     @Test
+    public void delete_image() throws Exception {
+        doReturn(dockerClient).when(testSubject).getClient();
+
+        final String imageId = "1234";
+        testSubject.deleteImage(imageId);
+        verify(dockerClient).removeImage(imageId, true, true);
+    }
+
+    @Test
+    public void delete_image_swallows_exception() throws Exception {
+        doReturn(dockerClient).when(testSubject).getClient();
+        final String imageId = "1234";
+        doThrow(new DockerException("some exception")).when(dockerClient).removeImage(imageId, true, true);
+
+        this.testSubject.deleteImage(imageId);
+    }
+
+    @Test
     public void close() {
         Whitebox.setInternalState(this.testSubject, "dockerClient", this.dockerClient);
         this.testSubject.close();
@@ -121,6 +146,4 @@ public class DockerJavaClientTest {
         this.testSubject.close();
         verifyZeroInteractions(this.dockerClient);
     }
-
-
 }

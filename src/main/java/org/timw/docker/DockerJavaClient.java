@@ -68,8 +68,9 @@ public class DockerJavaClient {
     public void deleteImage(final String imageId) {
         try {
             this.getClient().removeImage(imageId, true, true);
-        } catch (final Exception e) {
-            throw new CleanerException(e);
+        } catch (final Exception e) {  // NOSONAR
+            final String reason = e.getMessage() != null ? e.getMessage() : e.getCause().getMessage();
+            LOG.error("Unable to delete image {}. Reason: {}", imageId, reason);
         }
     }
 
