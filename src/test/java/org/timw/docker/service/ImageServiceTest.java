@@ -21,11 +21,14 @@ public class ImageServiceTest {
     @Mock
     private DockerJavaClient dockerJavaClient;
 
+    @Mock
+    private ContainerService containerService;
+
     private ImageService testSubject;
 
     @Before
     public void setup() {
-        this.testSubject = new ImageService(this.dockerJavaClient, false);
+        this.testSubject = new ImageService(this.dockerJavaClient, this.containerService, false);
     }
 
     @Test
@@ -36,7 +39,7 @@ public class ImageServiceTest {
         final List<Image> images = Lists.newArrayList(image1, image2, image3);
 
         when(this.dockerJavaClient.listImages()).thenReturn(images);
-        assertThat(this.testSubject.listImages()).containsExactly(image1, image2, image3);
+        assertThat(this.testSubject.listAllImages()).containsExactly(image1, image2, image3);
     }
 
     @Test

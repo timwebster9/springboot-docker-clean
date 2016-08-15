@@ -10,9 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-import static com.spotify.docker.client.DockerClient.ListContainersParam.allContainers;
-import static com.spotify.docker.client.DockerClient.ListContainersParam.withStatusCreated;
-import static com.spotify.docker.client.DockerClient.ListContainersParam.withStatusExited;
+import static com.spotify.docker.client.DockerClient.ListContainersParam.*;
 
 @Component
 public class DockerJavaClient {
@@ -41,6 +39,15 @@ public class DockerJavaClient {
     public List<Container> listNonRunningContainers() {
         try {
             return this.getClient().listContainers(withStatusExited(), withStatusCreated());
+        }
+        catch (final Exception e) {
+            throw new CleanerException(e);
+        }
+    }
+
+    public List<Container> listRunningContainers() {
+        try {
+            return this.getClient().listContainers(withStatusRunning());
         }
         catch (final Exception e) {
             throw new CleanerException(e);

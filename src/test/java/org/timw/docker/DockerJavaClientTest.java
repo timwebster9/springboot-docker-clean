@@ -73,6 +73,15 @@ public class DockerJavaClientTest {
         assertThat(containers).isEmpty();
     }
 
+    @Test
+    public void list_running_containers() throws Exception {
+        doReturn(dockerClient).when(testSubject).getClient();
+        when(dockerClient.listContainers(any())).thenReturn(new ArrayList<>());
+
+        final List<Container> containers = testSubject.listRunningContainers();
+        assertThat(containers).isEmpty();
+    }
+
     @Test(expected = CleanerException.class)
     public void list_non_running_containers_throws_exception() throws Exception {
         doReturn(dockerClient).when(testSubject).getClient();

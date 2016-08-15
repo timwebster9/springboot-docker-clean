@@ -36,6 +36,12 @@ public class ContainerServiceTest {
     }
 
     @Test
+    public void list_running_containers() {
+        when(this.dockerJavaClient.listRunningContainers()).thenReturn(Lists.newArrayList());
+        assertThat(this.testSubject.listRunningContainers()).isEmpty();
+    }
+
+    @Test
     public void delete_non_running_containers() {
         final Container container1 = mock(Container.class);
         final Container container2 = mock(Container.class);

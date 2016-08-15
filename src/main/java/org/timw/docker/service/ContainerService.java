@@ -26,6 +26,10 @@ public class ContainerService {
         return this.dockerJavaClient.listNonRunningContainers();
     }
 
+    public List<Container> listRunningContainers() {
+        return this.dockerJavaClient.listRunningContainers();
+    }
+
     public void deleteNonRunningContainers() {
         final List<Container> nonRunningContainers = this.listNonRunningContainers();
         nonRunningContainers.forEach(container -> deleteContainer(container.id()));
