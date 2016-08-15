@@ -34,9 +34,7 @@ public class CleanApp implements CommandLineRunner {
 
     @Override
     public void run(final String ... args) throws Exception {
-        if (this.dryrun) {
-            LOG.info("Dry run is {}", dryrun ? "enabled" : "disabled");
-        }
+        LOG.info("Dry run is {}", dryrun ? "enabled" : "disabled");
 
         try {
             this.cleanerService.clean();
