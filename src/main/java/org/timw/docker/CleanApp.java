@@ -9,6 +9,11 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.timw.docker.service.CleanerService;
 
+/**
+ * To run as a container:
+ *
+ * docker run --env dryrun=false --rm -v /var/run/docker.sock:/var/run/docker.sock mars:18079/docker-clean:latest
+ */
 @SpringBootApplication
 public class CleanApp implements CommandLineRunner {
 
@@ -42,6 +47,6 @@ public class CleanApp implements CommandLineRunner {
     }
 
     public static void main(String[] args) throws Exception {
-        SpringApplication.run(CleanApp.class, args);
+        SpringApplication.run(CleanApp.class, args);  // NOSONAR
     }
 }

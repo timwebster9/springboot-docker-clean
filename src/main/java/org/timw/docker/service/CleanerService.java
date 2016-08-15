@@ -17,6 +17,6 @@ public class CleanerService {
 
     public void clean() {
         this.containerService.deleteNonRunningContainers();
-        this.imageService.deleteAllImages();
+        this.imageService.deleteImagesFromNonRunningContainers();
     }
 }

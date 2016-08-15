@@ -24,7 +24,7 @@ public class CleanerServiceTest {
     public void clean() throws Exception {
         this.testSubject.clean();
         verify(this.containerService).deleteNonRunningContainers();
-        verify(this.imageService).deleteAllImages();
+        verify(this.imageService).deleteImagesFromNonRunningContainers();
     }
 
 }

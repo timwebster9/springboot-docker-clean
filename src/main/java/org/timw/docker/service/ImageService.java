@@ -1,10 +1,7 @@
 package org.timw.docker.service;
 
-import com.spotify.docker.client.messages.Container;
 import com.spotify.docker.client.messages.Image;
 import java.util.List;
-import java.util.stream.Collectors;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,21 +30,12 @@ public class ImageService {
         return this.dockerJavaClient.listImages();
     }
 
-    public List<Image> listImagesFromNonRunningContainers() {
+    public void deleteImagesFromNonRunningContainers() {
         final List<Image> allImages = this.listAllImages();
-        final List<Container> runningContainers = this.containerService.listRunningContainers();
-        final List<String> imagesForRunningContainers = runningContainers.stream().map(Container::imageId).collect(Collectors.toList());
-        final List<Image> result = allImages.stream().filter(image -> !imagesForRunningContainers.contains(image.id())).collect(Collectors.toList());
-        return null;
-    }
-
-    public void deleteAllImages() {
-        final List<Image> images = this.listAllImages();
-        images.forEach(image -> deleteImage(image.id()));
-    }
-
-    private boolean notUsedInRunningContainer(final String imageId, final List<Container> runningContainers) {
-        return false;
+        final List<String> imageIds = this.containerService.listImageIdsFromRunningContainers();
+        allImages.stream()
+                 .filter(image -> !imageIds.contains(image.id()))
+                 .forEach(image -> this.deleteImage(image.id()));
     }
 
     private void deleteImage(final String imageId) {

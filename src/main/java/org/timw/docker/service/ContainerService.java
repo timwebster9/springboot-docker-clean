@@ -2,6 +2,7 @@ package org.timw.docker.service;
 
 import com.spotify.docker.client.messages.Container;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +29,11 @@ public class ContainerService {
 
     public List<Container> listRunningContainers() {
         return this.dockerJavaClient.listRunningContainers();
+    }
+
+    public List<String> listImageIdsFromRunningContainers() {
+        final List<Container> runningContainers = this.listRunningContainers();
+        return runningContainers.stream().map(Container::imageId).collect(Collectors.toList());
     }
 
     public void deleteNonRunningContainers() {
