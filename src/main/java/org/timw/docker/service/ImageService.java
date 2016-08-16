@@ -2,6 +2,7 @@ package org.timw.docker.service;
 
 import com.spotify.docker.client.messages.Image;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +11,7 @@ import org.springframework.stereotype.Component;
 import org.timw.docker.DockerJavaClient;
 
 @Component
-public class ImageService {
+class ImageService {
 
     private static final Logger LOG = LoggerFactory.getLogger(ImageService.class);
     private DockerJavaClient dockerJavaClient;
@@ -19,9 +20,9 @@ public class ImageService {
     private boolean dryRun;
 
     @Autowired
-    public ImageService(final DockerJavaClient dockerJavaClient,
+    ImageService(final DockerJavaClient dockerJavaClient,
                         final ContainerService containerService,
-                        @Value("${exclusions.images}") List<String> exclusions,
+                        @Value("{'${exclusions.images}'.split(',')}") List<String> exclusions,
                         @Value("${dryrun}") boolean dryRun) {
         this.dockerJavaClient = dockerJavaClient;
         this.containerService = containerService;
@@ -29,24 +30,30 @@ public class ImageService {
         this.dryRun = dryRun;
     }
 
-    public List<Image> listAllImages() {
+    List<Image> listAllImages() {
         final List<Image> allImages = this.dockerJavaClient.listImages();
         LOG.info("Listing all images:");
-        return allImages;
-
-//        return allImages.stream()
-//                .sorted((o1, o2) -> Long.compare(Long.parseLong(o1.created()), Long.parseLong(o2.created())))
-//                .collect(Collectors.toList());
-    }
-
-    public void deleteImagesFromNonRunningContainers() {
-        final List<Image> allImages = this.listAllImages();
         LOG.info("Listing all sorted images:");
         allImages.forEach(this::logImage);
+        return allImages;
+    }
+
+    void deleteImagesFromNonRunningContainers() {
+        final List<Image> filteredImages = this.filteredImages();
         final List<String> imageIds = this.containerService.listImageIdsFromRunningContainers();
-        allImages.stream()
+        filteredImages.stream()
                  .filter(image -> !imageIds.contains(image.id()))
                  .forEach(image -> this.deleteImage(image.id()));
+    }
+
+    List<Image> filteredImages() {
+        final List<Image> allImages = this.listAllImages();
+        System.out.println("Exclusions: ");
+        this.exclusions.stream().forEach(System.out::println);
+        return allImages.stream()
+                     .filter(image -> image.repoTags().stream()
+                             .noneMatch(this.exclusions::contains))
+                .collect(Collectors.toList());
     }
 
     private void logImage(final Image image) {

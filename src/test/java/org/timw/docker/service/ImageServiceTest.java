@@ -1,5 +1,6 @@
 package org.timw.docker.service;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.spotify.docker.client.messages.Image;
 import java.util.List;
@@ -65,6 +66,10 @@ public class ImageServiceTest {
         when(image2.id()).thenReturn(imageId2);
         when(image3.id()).thenReturn(imageId3);
 
+        when(image1.repoTags()).thenReturn(ImmutableList.of("tag1"));
+        when(image2.repoTags()).thenReturn(ImmutableList.of("tag2"));
+        when(image3.repoTags()).thenReturn(ImmutableList.of("tag3"));
+
         this.testSubject.deleteImagesFromNonRunningContainers();
 
         // verify 2 and 3 not deleted
@@ -73,5 +78,43 @@ public class ImageServiceTest {
 
         // verify 3 is deleted
         verify(this.dockerJavaClient).deleteImage(imageId3);
+    }
+
+    @Test
+    public void filter_images_single_tag() {
+        final Image image1 = mock(Image.class);
+        final Image image2 = mock(Image.class);
+        final Image image3 = mock(Image.class);
+        final List<Image> allImages = Lists.newArrayList(image1, image2, image3);
+
+        when(image1.repoTags()).thenReturn(ImmutableList.of("tag1"));
+        when(image2.repoTags()).thenReturn(ImmutableList.of("tag2"));
+        when(image3.repoTags()).thenReturn(ImmutableList.of("tag3"));
+
+        when(this.dockerJavaClient.listImages()).thenReturn(allImages);
+
+        // "tag3" is an exclusion
+        this.testSubject = new ImageService(this.dockerJavaClient, this.containerService, Lists.newArrayList("tag3"), false);
+        final List<Image> actual = this.testSubject.filteredImages();
+        assertThat(actual).containsExactly(image1, image2);
+    }
+
+    @Test
+    public void filter_images_multiple_tag() {
+        final Image image1 = mock(Image.class);
+        final Image image2 = mock(Image.class);
+        final Image image3 = mock(Image.class);
+        final List<Image> allImages = Lists.newArrayList(image1, image2, image3);
+
+        when(image1.repoTags()).thenReturn(ImmutableList.of("tag1"));
+        when(image2.repoTags()).thenReturn(ImmutableList.of("tag2", "tag3"));
+        when(image3.repoTags()).thenReturn(ImmutableList.of("tag3"));
+
+        when(this.dockerJavaClient.listImages()).thenReturn(allImages);
+
+        // "tag3" is an exclusion
+        this.testSubject = new ImageService(this.dockerJavaClient, this.containerService, Lists.newArrayList("tag3"), false);
+        final List<Image> actual = this.testSubject.filteredImages();
+        assertThat(actual).containsExactly(image1);
     }
 }
