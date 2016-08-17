@@ -28,7 +28,7 @@ public class CleanApp implements CommandLineRunner {
     private boolean dryrun;
 
     @Autowired
-    public CleanApp(final CleanerService cleanerService,
+    CleanApp(final CleanerService cleanerService,
                     final DockerJavaClient dockerJavaClient,
                     @Value("${dryrun}") boolean dryRun) {
         this.cleanerService = cleanerService;

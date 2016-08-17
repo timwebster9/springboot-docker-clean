@@ -1,7 +1,6 @@
 package org.timw.docker.service;
 
 import com.spotify.docker.client.messages.Container;
-import com.spotify.docker.client.messages.Image;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
@@ -12,34 +11,40 @@ import org.springframework.stereotype.Component;
 import org.timw.docker.DockerJavaClient;
 
 @Component
-public class ContainerService {
+class ContainerService {
 
     private static final Logger LOG = LoggerFactory.getLogger(ContainerService.class);
     private DockerJavaClient dockerJavaClient;
     private boolean dryRun;
 
     @Autowired
-    public ContainerService(final DockerJavaClient dockerJavaClient, @Value("${dryrun}") boolean dryRun) {
+    ContainerService(final DockerJavaClient dockerJavaClient, @Value("${dryrun}") boolean dryRun) {
         this.dockerJavaClient = dockerJavaClient;
         this.dryRun = dryRun;
     }
 
-    public List<Container> listNonRunningContainers() {
+    List<Container> listNonRunningContainers() {
         return this.dockerJavaClient.listNonRunningContainers();
     }
 
-    public List<Container> listRunningContainers() {
+    List<Container> listRunningContainers() {
         return this.dockerJavaClient.listRunningContainers();
     }
 
-    public List<String> listImageIdsFromRunningContainers() {
+    List<String> listImageIdsFromRunningContainers() {
         final List<Container> runningContainers = this.listRunningContainers();
         return runningContainers.stream().map(Container::imageId).collect(Collectors.toList());
     }
 
-    public void deleteNonRunningContainers() {
+    void deleteNonRunningContainers() {
         final List<Container> nonRunningContainers = this.listNonRunningContainers();
+        LOG.info("Non-running containers:");
+        nonRunningContainers.forEach(this::logContainers);
         nonRunningContainers.forEach(container -> deleteContainer(container.id()));
+    }
+
+    private void logContainers(final Container container) {
+        LOG.info("Container ID: {}, image: {}, name: {}", container.id(), container.image(), container.names());
     }
 
     private void deleteContainer(final String containerId) {

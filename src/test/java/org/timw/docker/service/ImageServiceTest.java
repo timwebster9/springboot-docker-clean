@@ -15,6 +15,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -42,6 +44,26 @@ public class ImageServiceTest {
 
         when(this.dockerJavaClient.listImages()).thenReturn(images);
         assertThat(this.testSubject.listAllImages()).containsExactly(image1, image2, image3);
+    }
+
+    @Test
+    public void dry_run() {
+        final Image image1 = mock(Image.class);
+        final List<Image> allImages = Lists.newArrayList(image1);
+
+        final String imageId1 = "1";
+
+        // no running containers
+        final List<String> runningImageIds = Lists.newArrayList();
+
+        when(this.dockerJavaClient.listImages()).thenReturn(allImages);
+        when(this.containerService.listImageIdsFromRunningContainers()).thenReturn(runningImageIds);
+
+        when(image1.id()).thenReturn(imageId1);
+
+        this.testSubject = new ImageService(this.dockerJavaClient, this.containerService, Lists.newArrayList(), true);
+        this.testSubject.deleteImagesFromNonRunningContainers();
+        verify(this.dockerJavaClient, never()).deleteImage(imageId1);
     }
 
     @Test
@@ -116,5 +138,24 @@ public class ImageServiceTest {
         this.testSubject = new ImageService(this.dockerJavaClient, this.containerService, Lists.newArrayList("tag3"), false);
         final List<Image> actual = this.testSubject.filteredImages();
         assertThat(actual).containsExactly(image1);
+    }
+
+    @Test
+    public void filter_images_null_tag() {
+        final Image image1 = mock(Image.class);
+        final Image image2 = mock(Image.class);
+        final Image image3 = mock(Image.class);
+        final List<Image> allImages = Lists.newArrayList(image1, image2, image3);
+
+        when(image1.repoTags()).thenReturn(ImmutableList.of("tag1"));
+        when(image2.repoTags()).thenReturn(null);
+        when(image3.repoTags()).thenReturn(ImmutableList.of("tag3"));
+
+        when(this.dockerJavaClient.listImages()).thenReturn(allImages);
+
+        // no exclusions, none should be filtered
+        this.testSubject = new ImageService(this.dockerJavaClient, this.containerService, Lists.newArrayList(), false);
+        final List<Image> actual = this.testSubject.filteredImages();
+        assertThat(actual).containsExactly(image1, image2, image3);
     }
 }

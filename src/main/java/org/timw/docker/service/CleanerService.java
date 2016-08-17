@@ -1,6 +1,5 @@
 package org.timw.docker.service;
 
-import com.spotify.docker.client.messages.Image;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -17,7 +16,6 @@ public class CleanerService {
     }
 
     public void clean() {
-        //this.imageService.listAllImages().stream().map(Image::repoTags).forEach(System.out::println);
         this.containerService.deleteNonRunningContainers();
         this.imageService.deleteImagesFromNonRunningContainers();
     }

@@ -30,7 +30,7 @@ public class DockerJavaClient {
         }
     }
 
-    public List<Container> listAllContainers() {
+    List<Container> listAllContainers() {
         try {
             return this.getClient().listContainers(allContainers());
         }
@@ -74,7 +74,7 @@ public class DockerJavaClient {
         }
     }
 
-    public void close() {
+    void close() {
         if (this.dockerClient != null) {
             LOG.info("Shutting down Docker client.");
             this.dockerClient.close();
