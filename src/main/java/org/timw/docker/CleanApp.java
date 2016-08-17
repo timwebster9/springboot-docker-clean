@@ -16,7 +16,7 @@ import org.timw.docker.service.CleanerService;
              --rm \
              -v /var/run/docker.sock:/var/run/docker.sock \
              -v /tmp/docker-clean:/tmp/docker-clean \
-             mars:18079/docker-clean:latest
+             mars:18079/springboot-docker-clean:latest
  */
 @SpringBootApplication
 public class CleanApp implements CommandLineRunner {

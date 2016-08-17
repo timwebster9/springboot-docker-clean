@@ -42,6 +42,23 @@ public class ContainerServiceTest {
     }
 
     @Test
+    public void list_image_ids_from_running_containers() {
+        final Container container1 = mock(Container.class);
+        final Container container2 = mock(Container.class);
+
+        final String imageId1 = "image1";
+        final String imageId2 = "image2";
+
+        when(container1.imageId()).thenReturn(imageId1);
+        when(container2.imageId()).thenReturn(imageId2);
+        when(this.dockerJavaClient.listRunningContainers())
+                .thenReturn(Lists.newArrayList(container1, container2));
+
+        final List<String> actual = this.testSubject.listImageIdsFromRunningContainers();
+        assertThat(actual).containsExactly(imageId1, imageId2);
+    }
+
+    @Test
     public void delete_non_running_containers() {
         final Container container1 = mock(Container.class);
         final Container container2 = mock(Container.class);

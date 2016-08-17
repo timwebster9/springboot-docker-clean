@@ -33,7 +33,9 @@ class ContainerService {
 
     List<String> listImageIdsFromRunningContainers() {
         final List<Container> runningContainers = this.listRunningContainers();
-        return runningContainers.stream().map(Container::imageId).collect(Collectors.toList());
+        return runningContainers.stream()
+                .map(Container::imageId)
+                .collect(Collectors.toList());
     }
 
     void deleteNonRunningContainers() {
