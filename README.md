@@ -54,6 +54,8 @@ Built by: [Apache Maven](https://maven.apache.org/), [docker-maven-plugin](https
 
 Tested by: [Mockito](http://mockito.org/), [AssertJ](http://joel-costigliola.github.io/assertj/)
 
+Analysed by: [SonarQube](http://www.sonarqube.org/)
+
 Inspired by: [docker-gc](https://github.com/spotify/docker-gc)
 
 ![IntelliJ image]
