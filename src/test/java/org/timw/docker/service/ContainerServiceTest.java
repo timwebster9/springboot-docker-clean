@@ -13,7 +13,9 @@ import org.timw.docker.DockerJavaClient;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.only;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -26,7 +28,7 @@ public class ContainerServiceTest {
 
     @Before
     public void setup() {
-        this.testSubject = new ContainerService(this.dockerJavaClient, false);
+        this.testSubject = new ContainerService(this.dockerJavaClient, Lists.newArrayList(), false);
     }
 
     @Test
@@ -60,23 +62,60 @@ public class ContainerServiceTest {
 
     @Test
     public void delete_non_running_containers() {
+        final String containerId1 = "1";
+        final String containerId2 = "2";
+        final String containerName1 = "name1";
+        final String containerName2 = "name2";
         final Container container1 = mock(Container.class);
         final Container container2 = mock(Container.class);
         final List<Container> nonRunningContainers = Lists.newArrayList(container1, container2);
 
         when(this.dockerJavaClient.listNonRunningContainers()).thenReturn(nonRunningContainers);
-        when(container1.id()).thenReturn("1");
-        when(container2.id()).thenReturn("2");
+        when(container1.id()).thenReturn(containerId1);
+        when(container2.id()).thenReturn(containerId2);
+        when(container1.names()).thenReturn(Lists.newArrayList(containerName1));
+        when(container2.names()).thenReturn(Lists.newArrayList(containerName2));
 
         this.testSubject.deleteNonRunningContainers();
 
-        verify(this.dockerJavaClient).deleteContainer("1");
-        verify(this.dockerJavaClient).deleteContainer("2");
+        verify(this.dockerJavaClient).deleteContainer(containerId1);
+        verify(this.dockerJavaClient).deleteContainer(containerId2);
+    }
+
+    @Test
+    public void delete_non_running_containers_with_exclusions() {
+        final String containerId1 = "1";
+        final String containerId2 = "2";
+        final String containerId3 = "3";
+
+        final String containerName1 = "/name1";
+        final String containerName2 = "/name2";
+        final String containerName3 = "/name3";
+
+        final Container container1 = mock(Container.class);
+        final Container container2 = mock(Container.class);
+        final Container container3 = mock(Container.class);
+        final List<Container> nonRunningContainers = Lists.newArrayList(container1, container2, container3);
+
+        when(this.dockerJavaClient.listNonRunningContainers()).thenReturn(nonRunningContainers);
+        when(container2.id()).thenReturn(containerId2);
+
+        when(container1.names()).thenReturn(Lists.newArrayList(containerName1));
+        when(container2.names()).thenReturn(Lists.newArrayList(containerName2));
+        when(container3.names()).thenReturn(Lists.newArrayList(containerName3));
+
+        this.testSubject = new ContainerService(this.dockerJavaClient, Lists.newArrayList("name1","name3"), false);
+        this.testSubject.deleteNonRunningContainers();
+
+        verify(this.dockerJavaClient, never()).deleteContainer(containerId1);
+        verify(this.dockerJavaClient, never()).deleteContainer(containerId3);
+        verify(this.dockerJavaClient, never()).deleteContainer(null);
+        verify(this.dockerJavaClient).deleteContainer(containerId2);
     }
 
     @Test
     public void delete_non_running_containers_dryrun() {
-        this.testSubject = new ContainerService(this.dockerJavaClient, true);
+        this.testSubject = new ContainerService(this.dockerJavaClient, Lists.newArrayList(), true);
 
         final Container container1 = mock(Container.class);
         final Container container2 = mock(Container.class);

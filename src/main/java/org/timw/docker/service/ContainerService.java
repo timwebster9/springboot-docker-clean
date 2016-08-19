@@ -15,11 +15,15 @@ class ContainerService {
 
     private static final Logger LOG = LoggerFactory.getLogger(ContainerService.class);
     private DockerJavaClient dockerJavaClient;
+    private List<String> exclusions;
     private boolean dryRun;
 
     @Autowired
-    ContainerService(final DockerJavaClient dockerJavaClient, @Value("${dryrun}") boolean dryRun) {
+    ContainerService(final DockerJavaClient dockerJavaClient,
+                     @Value("${exclusions.containers}") List<String> exclusions,
+                     @Value("${dryrun}") boolean dryRun) {
         this.dockerJavaClient = dockerJavaClient;
+        this.exclusions = exclusions;
         this.dryRun = dryRun;
     }
 
@@ -40,13 +44,12 @@ class ContainerService {
 
     void deleteNonRunningContainers() {
         final List<Container> nonRunningContainers = this.listNonRunningContainers();
-        LOG.info("Non-running containers:");
-        nonRunningContainers.forEach(this::logContainers);
-        nonRunningContainers.forEach(container -> deleteContainer(container.id()));
-    }
-
-    private void logContainers(final Container container) {
-        LOG.info("Container ID: {}, image: {}, name: {}", container.id(), container.image(), container.names());
+        LOG.info("Container exclusions are: {}", this.exclusions);
+        nonRunningContainers.stream()
+                .filter(container -> container.names().stream()
+                        .map(name -> name.substring(1))  // strip "/" prefix
+                        .noneMatch(this.exclusions::contains))
+                .forEach(container -> deleteContainer(container.id()));
     }
 
     private void deleteContainer(final String containerId) {

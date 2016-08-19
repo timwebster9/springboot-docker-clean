@@ -34,10 +34,7 @@ class ImageService {
     }
 
     List<Image> listAllImages() {
-        final List<Image> allImages = this.dockerJavaClient.listImages();
-        LOG.info("Listing all images:");
-        allImages.forEach(ImageService::logImage);
-        return allImages;
+        return this.dockerJavaClient.listImages();
     }
 
     void deleteImagesFromNonRunningContainers() {
@@ -50,14 +47,11 @@ class ImageService {
 
     List<Image> filteredImages() {
         final List<Image> allImages = this.listAllImages();
+        LOG.info("Images exclusions are: {}", this.exclusions);
         return allImages.stream()
            .filter(image -> ofNullable(image.repoTags()).orElse(ImmutableList.of()).stream()
                .noneMatch(this.exclusions::contains))
            .collect(Collectors.toList());
-    }
-
-    private static void logImage(final Image image) {
-        LOG.info("Image ID: {}, Created: {}", image.id(), image.created());
     }
 
     private void deleteImage(final String imageId) {
