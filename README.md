@@ -48,5 +48,9 @@ To exclude containers or images, include the following (the identifiers are exam
 * images are excluded by repo:tag (make sure you remember to include the tag!)
 
 ## Credits
-Uses [Spring Boot](http://projects.spring.io/spring-boot/), [docker-maven-plugin](https://github.com/spotify/docker-maven-plugin), [docker-client](https://github.com/spotify/docker-client), inspired by [docker-gc](https://github.com/spotify/docker-gc)
+Powered by: [Spring Boot](http://projects.spring.io/spring-boot/), [docker-maven-plugin](https://github.com/spotify/docker-maven-plugin), [docker-client](https://github.com/spotify/docker-client)
+
+Tested by: [Mockito](http://mockito.org/), [AssertJ](http://joel-costigliola.github.io/assertj/)
+
+Inspired by: [docker-gc](https://github.com/spotify/docker-gc)
 
