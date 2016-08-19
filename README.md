@@ -3,7 +3,7 @@
 
 This application runs as a Docker container, and does the following:
 * removes non-running containers
-* removes images from non-running containers.  --force and 'prune' are both enabled.
+* removes images from non-running containers.  `--force` and 'prune' are both enabled.
 * has 'dry run' feature (on by default)
 * allows exclusion of containers (by name)
 * allows exclusion of images (by repo:tag)
@@ -15,8 +15,8 @@ To build with Maven:
     mvn clean package
 
 ### Note:
-* this will also tag your image using ${registry.url}, although the untagged version will still be present.
-* `clean install` will attempt to push to your docker registry.  The install phase is used to avoid invoking the Maven deploy plugin.  If you really want to do this you'll have to add the `<distributionManagement/>` section to the pom.xml, or pass in the required system properties.  Also, make sure to override the ${registry.url} property in the pom.xml to something appropriate for your environment.  You can do this by passing it in as a system property. e.g. `mvn clean package -Dregistry.url=hostname:port`
+* this will also tag your image using `${registry.url}`, although the untagged version will still be present.
+* `clean install` will attempt to push to your docker registry.  The install phase is used to avoid invoking the Maven deploy plugin.  If you really want to do this you'll have to add the `<distributionManagement/>` section to the pom.xml, or pass in the required system properties.  Also, make sure to override the `${registry.url}` property in the pom.xml to something appropriate for your environment.  You can do this by passing it in as a system property. e.g. `mvn clean package -Dregistry.url=hostname:port`
 
 ## Running
 
