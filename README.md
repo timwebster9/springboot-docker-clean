@@ -16,7 +16,7 @@ To build with Maven:
 
 ### Note:
 * this will also tag your image using ${registry.url}, although the untagged version will still be present.
-* 'clean install' will attempt to push to your docker registry.  The install phase is used to avoid invoking the Maven deploy plugin.  If you really want to do this you'll have to add the `<distributionManagement/>` section to the pom.xml, or pass in the required system properties.  Also, make sure to override the ${registry.url} property in the pom.xml to something appropriate for your environment.  You can do this by passing it in as a system property. e.g. `mvn clean package -Dregistry.url=hostname:port`
+* `clean install` will attempt to push to your docker registry.  The install phase is used to avoid invoking the Maven deploy plugin.  If you really want to do this you'll have to add the `<distributionManagement/>` section to the pom.xml, or pass in the required system properties.  Also, make sure to override the ${registry.url} property in the pom.xml to something appropriate for your environment.  You can do this by passing it in as a system property. e.g. `mvn clean package -Dregistry.url=hostname:port`
 
 ## Running
 
@@ -47,5 +47,6 @@ To exclude containers or images, include the following (the identifiers are exam
 * containers are excluded by name.
 * images are excluded by repo:tag (make sure you remember to include the tag!)
 
-
+## Credits
+Uses [docker-maven-plugin](https://github.com/spotify/docker-maven-plugin), [docker-client](https://github.com/spotify/docker-client), inspired by [docker-gc](https://github.com/spotify/docker-gc)
 
