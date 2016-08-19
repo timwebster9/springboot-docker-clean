@@ -56,3 +56,5 @@ Tested by: [Mockito](http://mockito.org/), [AssertJ](http://joel-costigliola.git
 
 Inspired by: [docker-gc](https://github.com/spotify/docker-gc)
 
+![IntelliJ image]
+(https://s-media-cache-ak0.pinimg.com/236x/bd/f4/90/bdf49052dd79aa1e1fc2270a02ba783c.jpg)
