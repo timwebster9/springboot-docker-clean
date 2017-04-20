@@ -122,14 +122,14 @@ public class DockerJavaClientTest {
 
         final String imageId = "1234";
         testSubject.deleteImage(imageId);
-        verify(dockerClient).removeImage(imageId, true, true);
+        verify(dockerClient).removeImage(imageId, true, false);
     }
 
     @Test
     public void delete_image_swallows_exception() throws Exception {
         doReturn(dockerClient).when(testSubject).getClient();
         final String imageId = "1234";
-        doThrow(new DockerException("some exception")).when(dockerClient).removeImage(imageId, true, true);
+        doThrow(new DockerException("some exception")).when(dockerClient).removeImage(imageId, true, false);
 
         this.testSubject.deleteImage(imageId);
     }

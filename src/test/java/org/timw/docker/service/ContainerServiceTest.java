@@ -1,5 +1,6 @@
 package org.timw.docker.service;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.spotify.docker.client.messages.Container;
 import java.util.List;
@@ -13,9 +14,7 @@ import org.timw.docker.DockerJavaClient;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.only;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -73,8 +72,8 @@ public class ContainerServiceTest {
         when(this.dockerJavaClient.listNonRunningContainers()).thenReturn(nonRunningContainers);
         when(container1.id()).thenReturn(containerId1);
         when(container2.id()).thenReturn(containerId2);
-        when(container1.names()).thenReturn(Lists.newArrayList(containerName1));
-        when(container2.names()).thenReturn(Lists.newArrayList(containerName2));
+        when(container1.names()).thenReturn(ImmutableList.of(containerName1));
+        when(container2.names()).thenReturn(ImmutableList.of(containerName2));
 
         this.testSubject.deleteNonRunningContainers();
 
@@ -100,9 +99,9 @@ public class ContainerServiceTest {
         when(this.dockerJavaClient.listNonRunningContainers()).thenReturn(nonRunningContainers);
         when(container2.id()).thenReturn(containerId2);
 
-        when(container1.names()).thenReturn(Lists.newArrayList(containerName1));
-        when(container2.names()).thenReturn(Lists.newArrayList(containerName2));
-        when(container3.names()).thenReturn(Lists.newArrayList(containerName3));
+        when(container1.names()).thenReturn(ImmutableList.of(containerName1));
+        when(container2.names()).thenReturn(ImmutableList.of(containerName2));
+        when(container3.names()).thenReturn(ImmutableList.of(containerName3));
 
         this.testSubject = new ContainerService(this.dockerJavaClient, Lists.newArrayList("name1","name3"), false);
         this.testSubject.deleteNonRunningContainers();
@@ -121,9 +120,15 @@ public class ContainerServiceTest {
         final Container container2 = mock(Container.class);
         final List<Container> nonRunningContainers = Lists.newArrayList(container1, container2);
 
+        final String containerName1 = "/name1";
+        final String containerName2 = "/name2";
+
         when(this.dockerJavaClient.listNonRunningContainers()).thenReturn(nonRunningContainers);
         when(container1.id()).thenReturn("1");
         when(container2.id()).thenReturn("2");
+
+        when(container1.names()).thenReturn(ImmutableList.of(containerName1));
+        when(container2.names()).thenReturn(ImmutableList.of(containerName2));
 
         this.testSubject.deleteNonRunningContainers();
 
