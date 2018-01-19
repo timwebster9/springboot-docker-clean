@@ -7,6 +7,9 @@ pipeline {
             label 'swarm'
         }
     }
+    options {
+        tcpForwardLog()
+    }
     stages {
         stage('Build') {
             steps {
