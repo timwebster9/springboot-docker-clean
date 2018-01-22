@@ -2,6 +2,7 @@
 
 node('swarm') {
     tcpForwardLog {
+        checkout scm
         docker.image('maven:3-alpine').inside {
             sh 'mvn -B clean package'
         }
